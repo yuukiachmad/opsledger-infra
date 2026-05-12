@@ -1,6 +1,10 @@
 name: OpsLedger Terraform
 
 on:
+  push:
+    branches:
+      - stage
+      - main
   workflow_dispatch:
     inputs:
       apply:
@@ -55,7 +59,12 @@ jobs:
     name: Apply infrastructure from main
     needs: terraform-plan
     runs-on: ubuntu-latest
-    if: needs['terraform-plan'].result == 'success' && inputs.apply
+    if: |
+      needs['terraform-plan'].result == 'success' &&
+      (
+        (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+        (github.event_name == 'workflow_dispatch' && inputs.apply)
+      )
     defaults:
       run:
         working-directory: terraform
