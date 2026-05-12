@@ -31,7 +31,15 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-The GitHub Actions workflow is manual-only by default so the public repository can be pushed safely before AWS credentials are configured. Run it with `apply=false` for validation and planning, then rerun with `apply=true` when you intentionally want to apply infrastructure changes.
+## GitHub Actions Workflow
+
+The Terraform workflow runs only when files under `terraform/**` change.
+
+- Pushes to `stage` run Terraform init, format check, validate, and plan.
+- Pull requests targeting `main` run Terraform init, format check, validate, and plan.
+- Pushes to `main`, including merges from `stage`, run Terraform init, format check, validate, plan, and apply.
+- After a successful apply on `main`, the workflow updates the kubeconfig for `opsledger-eks` and installs the AWS NGINX ingress controller manifest.
+
 
 ## Teardown
 
