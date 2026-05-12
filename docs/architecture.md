@@ -31,5 +31,3 @@ terraform validate
 terraform plan -out=tfplan
 terraform apply -auto-approve tfplan
 ```
-
-The workflow is manual-only by default. Run it with `apply=false` for validation and planning, then rerun with `apply=true` when infrastructure changes should be applied.
